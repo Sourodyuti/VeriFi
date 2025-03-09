@@ -1,0 +1,1104 @@
+/* Modern Teal/Purple Color Scheme with Dark Mode Support */
+:root {
+  /* Light Theme Colors */
+  --primary: #2d3748;
+  --secondary: #4a5568;
+  --accent: #38b2ac;
+  --accent-light: #4fd1c5;
+  --accent-gradient: linear-gradient(135deg, #38b2ac, #805ad5);
+  --accent-dark: #319795;
+  --success: #48bb78;
+  --warning: #ecc94b;
+  --danger: #f56565;
+  --background: #f7fafc;
+  --card-bg: #ffffff;
+  --text: #2d3748;
+  --text-light: #718096;
+  --text-muted: #a0aec0;
+  --border: rgba(0, 0, 0, 0.1);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.08);
+  
+  /* Dark Theme Colors (will be applied with .dark-theme class) */
+  --dark-primary: #f7fafc;
+  --dark-secondary: #e2e8f0;
+  --dark-accent: #4fd1c5;
+  --dark-accent-light: #38b2ac;
+  --dark-accent-gradient: linear-gradient(135deg, #4fd1c5, #9f7aea);
+  --dark-accent-dark: #319795;
+  --dark-success: #68d391;
+  --dark-warning: #f6e05e;
+  --dark-danger: #fc8181;
+  --dark-background: #1a202c;
+  --dark-card-bg: #2d3748;
+  --dark-text: #f7fafc;
+  --dark-text-light: #e2e8f0;
+  --dark-text-muted: #a0aec0;
+  --dark-border: rgba(255, 255, 255, 0.1);
+  --dark-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --dark-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --dark-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+  
+  /* Spacing Variables */
+  --transition-bezier: cubic-bezier(0.16, 1, 0.3, 1);
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --space-xl: 4rem;
+}
+
+/* Dark Theme Class - Apply to both html and body */
+html.dark-theme,
+body.dark-theme {
+  --primary: var(--dark-primary);
+  --secondary: var(--dark-secondary);
+  --accent: var(--dark-accent);
+  --accent-light: var(--dark-accent-light);
+  --accent-gradient: var(--dark-accent-gradient);
+  --accent-dark: var(--dark-accent-dark);
+  --success: var(--dark-success);
+  --warning: var(--dark-warning);
+  --danger: var(--dark-danger);
+  --background: var(--dark-background);
+  --card-bg: var(--dark-card-bg);
+  --text: var(--dark-text);
+  --text-light: var(--dark-text-light);
+  --text-muted: var(--dark-text-muted);
+  --border: var(--dark-border);
+  --shadow-sm: var(--dark-shadow-sm);
+  --shadow: var(--dark-shadow);
+  --shadow-lg: var(--dark-shadow-lg);
+}
+
+/* Base Styles with Animation Support */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  transition: background-color 0.3s var(--transition-bezier);
+}
+
+/* Core Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+body {
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--background);
+  color: var(--text);
+  line-height: 1.6;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  font-size: 17px;
+  overflow-x: hidden;
+  transition: background-color 0.3s var(--transition-bezier), color 0.3s var(--transition-bezier);
+}
+
+/* Professional Theme Toggle Button */
+.theme-toggle {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: var(--card-bg);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 99;
+  box-shadow: var(--shadow);
+  transition: all 0.3s var(--transition-bezier);
+  border: 1px solid var(--border);
+  font-size: 20px;
+  overflow: hidden;
+}
+
+.theme-toggle::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--accent-gradient);
+  opacity: 0;
+  transition: opacity 0.3s var(--transition-bezier);
+  z-index: -1;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  color: var(--accent);
+}
+
+.theme-toggle:hover::before {
+  opacity: 0.05;
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+.theme-toggle .icon {
+  transition: transform 0.5s var(--transition-bezier), opacity 0.3s var(--transition-bezier);
+  position: absolute;
+}
+
+.theme-toggle .icon-sun {
+  opacity: 1;
+}
+
+.theme-toggle .icon-moon {
+  opacity: 0;
+  transform: rotate(30deg) scale(0.7);
+}
+
+/* Dark mode theme toggle styles */
+html.dark-theme .theme-toggle,
+body.dark-theme .theme-toggle {
+  background: var(--dark-card-bg);
+  color: var(--dark-text);
+  border-color: var(--dark-border);
+}
+
+html.dark-theme .theme-toggle:hover,
+body.dark-theme .theme-toggle:hover {
+  color: var(--dark-accent);
+}
+
+html.dark-theme .theme-toggle .icon-sun,
+body.dark-theme .theme-toggle .icon-sun {
+  opacity: 0;
+  transform: rotate(-30deg) scale(0.7);
+}
+
+html.dark-theme .theme-toggle .icon-moon,
+body.dark-theme .theme-toggle .icon-moon {
+  opacity: 1;
+  transform: rotate(0) scale(1);
+}
+
+/* Scroll-triggered Animation Classes */
+.fade-in {
+  opacity: 0;
+  transition: opacity 0.8s var(--transition-bezier), transform 0.8s var(--transition-bezier);
+}
+
+.slide-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s var(--transition-bezier), transform 0.8s var(--transition-bezier);
+}
+
+.slide-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity 0.8s var(--transition-bezier), transform 0.8s var(--transition-bezier);
+}
+
+.slide-right {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.8s var(--transition-bezier), transform 0.8s var(--transition-bezier);
+}
+
+.scale-in {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.8s var(--transition-bezier), transform 0.8s var(--transition-bezier);
+}
+
+.animate {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
+/* Staggered Animation Delays */
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.2s; }
+.delay-3 { transition-delay: 0.3s; }
+.delay-4 { transition-delay: 0.4s; }
+.delay-5 { transition-delay: 0.5s; }
+
+/* Typography with More Space */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--primary);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-md);
+  transition: color 0.3s var(--transition-bezier);
+}
+
+h1 {
+  font-size: 56px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: var(--space-lg);
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% auto;
+  animation: shimmer 8s infinite linear;
+}
+
+h2 {
+  font-size: 40px;
+  margin-top: var(--space-xl);
+  margin-bottom: var(--space-md);
+  position: relative;
+}
+
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 0;
+  width: 80px;
+  height: 4px;
+  background: var(--accent-gradient);
+  border-radius: 2px;
+  transition: width 0.6s var(--transition-bezier);
+}
+
+h2:hover::after {
+  width: 120px;
+}
+
+h3 {
+  font-size: 28px;
+  margin-top: var(--space-lg);
+  margin-bottom: var(--space-md);
+}
+
+p {
+  margin-bottom: var(--space-md);
+  line-height: 1.7;
+}
+
+/* Spacious Container with Parallax */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-xl);
+  position: relative;
+}
+
+.parallax-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: radial-gradient(circle at 10% 20%, rgba(56, 178, 172, 0.03) 0%, transparent 40%),
+              radial-gradient(circle at 90% 80%, rgba(128, 90, 213, 0.03) 0%, transparent 40%);
+  transform: translateZ(-10px) scale(2);
+  pointer-events: none;
+}
+
+/* Sticky Navigation with Scroll Effect - Thinner Version */
+nav {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: var(--space-xs) var(--space-lg);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: all 0.3s var(--transition-bezier);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav.scrolled {
+  padding: var(--space-xs) var(--space-lg);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: var(--shadow);
+}
+
+nav:hover {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+/* Navbar Logo/Brand Text */
+.navbar-brand, 
+.logo, 
+nav h1, 
+nav h2, 
+nav h3 {
+  color: var(--primary);
+  font-weight: 700;
+  transition: color 0.3s var(--transition-bezier);
+  margin: 0;
+}
+
+/* Dark mode specific overrides for navbar text */
+html.dark-theme .navbar-brand,
+body.dark-theme .navbar-brand,
+html.dark-theme .logo,
+body.dark-theme .logo,
+html.dark-theme nav h1,
+body.dark-theme nav h1,
+html.dark-theme nav h2,
+body.dark-theme nav h2,
+html.dark-theme nav h3,
+body.dark-theme nav h3 {
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Interactive Buttons with More Space */
+button {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: 980px;
+  font-size: 17px;
+  font-weight: 500;
+  transition: all 0.3s var(--transition-bezier);
+  cursor: pointer;
+  letter-spacing: -0.01em;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  margin: var(--space-sm) var(--space-sm) var(--space-sm) 0;
+}
+
+button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.7s var(--transition-bezier);
+  z-index: -1;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(56, 178, 172, 0.3);
+}
+
+button:hover::before {
+  left: 100%;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* Button Variants */
+.btn-primary {
+  background: var(--accent-gradient);
+  background-size: 200% auto;
+  animation: shimmer 8s infinite linear;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, var(--success), #38a169);
+}
+
+.btn-warning {
+  background: linear-gradient(135deg, var(--warning), #d69e2e);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, var(--danger), #e53e3e);
+}
+
+/* Animated Cards with More Space */
+.card {
+  background: var(--card-bg);
+  border-radius: 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  transition: all 0.5s var(--transition-bezier);
+  overflow: hidden;
+  transform-origin: center bottom;
+  position: relative;
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--accent-gradient);
+  transform: scaleX(0);
+  transition: transform 0.5s var(--transition-bezier);
+}
+
+.card:hover {
+  box-shadow: var(--shadow);
+  transform: translateY(-6px);
+}
+
+.card:hover::before {
+  transform: scaleX(1);
+}
+
+/* Form Elements with More Space */
+input {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: var(--space-md);
+  width: 100%;
+  font-size: 17px;
+  transition: all 0.3s var(--transition-bezier);
+  color: var(--text);
+  margin-bottom: var(--space-md);
+}
+
+input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(56, 178, 172, 0.1);
+  outline: none;
+  background: white;
+  transform: translateY(-2px);
+}
+
+input::placeholder {
+  color: var(--text-muted);
+  transition: opacity 0.3s;
+}
+
+input:focus::placeholder {
+  opacity: 0.5;
+}
+
+/* Loading Indicator */
+.loading {
+  width: 28px;
+  height: 28px;
+  border: 2px solid rgba(56, 178, 172, 0.1);
+  border-radius: 50%;
+  border-top-color: var(--accent);
+  animation: spin 1s linear infinite;
+  margin: var(--space-sm) auto;
+}
+
+/* Status Messages with More Space */
+.success-message, .error-message {
+  padding: var(--space-md) var(--space-lg);
+  border-radius: 16px;
+  font-size: 16px;
+  margin: var(--space-md) 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  transition: all 0.3s var(--transition-bezier);
+  animation: slideInLeft 0.5s var(--transition-bezier);
+}
+
+.success-message {
+  background: rgba(72, 187, 120, 0.1);
+  border-left: 4px solid var(--success);
+  color: #2f855a;
+}
+
+.error-message {
+  background: rgba(245, 101, 101, 0.1);
+  border-left: 4px solid var(--danger);
+  color: #c53030;
+}
+
+/* Certificate Styles with More Space */
+.certificate-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: var(--space-lg);
+  transition: all 0.5s var(--transition-bezier);
+  transform-origin: center bottom;
+  position: relative;
+  z-index: 1;
+  margin-bottom: var(--space-md);
+}
+
+.certificate-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--accent-gradient);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.5s var(--transition-bezier);
+  border-radius: 24px;
+}
+
+.certificate-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow);
+  color: white;
+}
+
+.certificate-card:hover::before {
+  opacity: 1;
+}
+
+.certificate-template {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: var(--space-xl);
+  text-align: center;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+  margin: var(--space-lg) 0;
+}
+
+.certificate-template::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    transparent, 
+    rgba(56, 178, 172, 0.1), 
+    transparent, 
+    transparent
+  );
+  animation: rotate 10s linear infinite;
+  z-index: -1;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Modal with Animation and More Space */
+.certificate-modal-overlay {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: fadeIn 0.3s var(--transition-bezier);
+}
+
+.certificate-modal {
+  background: var(--card-bg);
+  border-radius: 24px;
+  box-shadow: var(--shadow-lg);
+  max-width: 90%;
+  width: 700px;
+  margin: var(--space-xl) auto;
+  animation: slideUp 0.5s var(--transition-bezier);
+  overflow: hidden;
+  transform-origin: bottom center;
+}
+
+/* Account Button with More Space */
+.account-button {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--border);
+  border-radius: 980px;
+  padding: var(--space-sm) var(--space-md);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 16px;
+  transition: all 0.3s var(--transition-bezier);
+  position: relative;
+  overflow: hidden;
+}
+
+.account-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--accent-gradient);
+  opacity: 0;
+  transition: opacity 0.3s var(--transition-bezier);
+  z-index: -1;
+}
+
+.account-button:hover {
+  border-color: transparent;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.account-button:hover::before {
+  opacity: 1;
+}
+
+/* Animated Lists with More Space */
+.records-list {
+  list-style: none;
+  background: var(--card-bg);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  perspective: 1000px;
+  margin: var(--space-lg) 0;
+}
+
+.records-list li {
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s var(--transition-bezier);
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.records-list li:nth-child(1) { animation-delay: 0.05s; }
+.records-list li:nth-child(2) { animation-delay: 0.1s; }
+.records-list li:nth-child(3) { animation-delay: 0.15s; }
+.records-list li:nth-child(4) { animation-delay: 0.2s; }
+.records-list li:nth-child(5) { animation-delay: 0.25s; }
+
+.records-list li:hover {
+  background: rgba(56, 178, 172, 0.05);
+  transform: translateX(8px) translateZ(5px);
+  box-shadow: -5px 0 10px rgba(0, 0, 0, 0.02);
+  z-index: 1;
+}
+
+.records-list li:last-child {
+  border-bottom: none;
+}
+
+/* Empty States with More Space */
+.empty-state {
+  text-align: center;
+  padding: var(--space-xl) var(--space-lg);
+  color: var(--text-light);
+  background: var(--card-bg);
+  border-radius: 24px;
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+  margin: var(--space-lg) 0;
+}
+
+.empty-state::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(56, 178, 172, 0.03) 0%, transparent 70%);
+  z-index: -1;
+  animation: pulse 8s infinite;
+}
+
+.empty-state svg {
+  width: 100px;
+  height: 100px;
+  margin-bottom: var(--space-lg);
+  color: var(--text-muted);
+  opacity: 0.6;
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Footer with More Space */
+.footer {
+  text-align: center;
+  margin-top: var(--space-xl);
+  padding: var(--space-lg) 0;
+  border-top: 1px solid var(--border);
+  color: var(--text-light);
+  font-size: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  animation: shimmer 4s infinite linear;
+  background-size: 200% 100%;
+}
+
+/* Scroll Progress Indicator */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 4px;
+  background: var(--accent-gradient);
+  z-index: 1000;
+  transition: width 0.1s;
+}
+
+/* Scroll-to-top Button */
+.scroll-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s var(--transition-bezier);
+  box-shadow: var(--shadow);
+  z-index: 99;
+  font-size: 24px;
+}
+
+.scroll-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Grid Layout for Better Spacing */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-lg);
+  margin: var(--space-lg) 0;
+}
+
+/* Section Spacing */
+.section {
+  margin-bottom: var(--space-xl);
+  padding: var(--space-lg) 0;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  :root {
+    --space-xs: 0.25rem;
+    --space-sm: 0.75rem;
+    --space-md: 1.25rem;
+    --space-lg: 2rem;
+    --space-xl: 3rem;
+  }
+  
+  h1 { font-size: 42px; }
+  h2 { font-size: 32px; }
+  .container { padding: var(--space-md); }
+  .certificate-template { padding: var(--space-lg); }
+  .grid { grid-template-columns: 1fr; }
+}
+
+/* Logo Styles */
+.logo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.logo-icon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-color: var(--accent);
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 24px;
+  margin-right: 4px;
+  transition: background-color 0.3s var(--transition-bezier);
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.tagline {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  margin: 0;
+  transition: color 0.3s var(--transition-bezier);
+}
+
+/* Navbar Layout */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+}
+
+/* Account Dropdown */
+.account-dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 0;
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  width: 300px;
+  z-index: 100;
+  overflow: hidden;
+  transition: background-color 0.3s var(--transition-bezier), box-shadow 0.3s var(--transition-bezier);
+}
+
+.dropdown-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  transition: border-color 0.3s var(--transition-bezier);
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item a {
+  color: var(--accent);
+  text-decoration: none;
+  display: block;
+  transition: color 0.3s var(--transition-bezier);
+}
+
+.dropdown-item a:hover {
+  text-decoration: underline;
+}
+
+.full-address {
+  font-family: monospace;
+  background-color: var(--background);
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  margin: 8px 0 0;
+  word-break: break-all;
+  transition: background-color 0.3s var(--transition-bezier);
+}
+
+.account-indicator {
+  position: relative;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: var(--success);
+  border-radius: 50%;
+  margin-right: 8px;
+  transition: background-color 0.3s var(--transition-bezier);
+}
+
+.connect-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Dark mode specific overrides */
+html.dark-theme .logo-icon,
+body.dark-theme .logo-icon {
+  background-color: var(--dark-accent);
+  box-shadow: 0 0 10px rgba(79, 209, 197, 0.5);
+}
+
+html.dark-theme .tagline,
+body.dark-theme .tagline {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+html.dark-theme .dropdown-menu,
+body.dark-theme .dropdown-menu {
+  background-color: var(--dark-card-bg);
+}
+
+html.dark-theme .dropdown-item,
+body.dark-theme .dropdown-item {
+  border-bottom-color: var(--dark-border);
+}
+
+html.dark-theme .dropdown-item a,
+body.dark-theme .dropdown-item a {
+  color: var(--dark-accent);
+}
+
+html.dark-theme .full-address,
+body.dark-theme .full-address {
+  background-color: var(--dark-background);
+}
+
+html.dark-theme .account-indicator,
+body.dark-theme .account-indicator {
+  background-color: var(--dark-success);
+}
+
+/* Dark mode navbar background */
+html.dark-theme nav,
+body.dark-theme nav {
+  background: rgba(26, 32, 44, 0.9); /* Dark background with slight transparency */
+  border-bottom: 1px solid var(--dark-border);
+}
+
+html.dark-theme nav.scrolled,
+body.dark-theme nav.scrolled {
+  background: rgba(26, 32, 44, 0.95); /* Slightly more opaque when scrolled */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+html.dark-theme nav:hover,
+body.dark-theme nav:hover {
+  background: rgba(26, 32, 44, 0.95);
+}
+
+/* Dark mode input field styles */
+html.dark-theme input,
+body.dark-theme input {
+  background: rgba(45, 55, 72, 0.8);
+  border-color: var(--dark-border);
+  color: var(--dark-text); /* White text in dark mode */
+}
+
+html.dark-theme input:focus,
+body.dark-theme input:focus {
+  background: rgba(45, 55, 72, 0.95);
+  border-color: var(--dark-accent);
+  box-shadow: 0 0 0 4px rgba(79, 209, 197, 0.2);
+}
+
+html.dark-theme input::placeholder,
+body.dark-theme input::placeholder {
+  color: var(--dark-text-muted);
+}
+
+/* Dark mode text field styles for any other form elements */
+html.dark-theme textarea,
+body.dark-theme textarea,
+html.dark-theme select,
+body.dark-theme select {
+  background: rgba(45, 55, 72, 0.8);
+  border-color: var(--dark-border);
+  color: var(--dark-text);
+}
+
+/* Dark mode card content styles */
+html.dark-theme .card,
+body.dark-theme .card {
+  color: var(--dark-text);
+}
+
+html.dark-theme .card p,
+body.dark-theme .card p,
+html.dark-theme .card span,
+body.dark-theme .card span,
+html.dark-theme .card div,
+body.dark-theme .card div {
+  color: var(--dark-text);
+}
+
+/* Ensure form labels are visible in dark mode */
+html.dark-theme label,
+body.dark-theme label {
+  color: var(--dark-text-light);
+}
+
+/* Fix any specific text elements that might need attention */
+html.dark-theme .token-balance,
+body.dark-theme .token-balance,
+html.dark-theme .certificate-info,
+body.dark-theme .certificate-info,
+html.dark-theme .record-info,
+body.dark-theme .record-info {
+  color: var(--dark-text);
+}
+
+/* Fix text in dropdown menus */
+html.dark-theme .dropdown-menu div,
+body.dark-theme .dropdown-menu div,
+html.dark-theme .dropdown-menu p,
+body.dark-theme .dropdown-menu p,
+html.dark-theme .dropdown-menu span,
+body.dark-theme .dropdown-menu span {
+  color: var(--dark-text);
+}

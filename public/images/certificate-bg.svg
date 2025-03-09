@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:0.05"/>
+      <stop offset="50%" style="stop-color:#14b8a6;stop-opacity:0.05"/>
+      <stop offset="100%" style="stop-color:#f43f5e;stop-opacity:0.05"/>
+    </linearGradient>
+    <pattern id="dots" width="30" height="30" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#6366f1" opacity="0.3"/>
+      <circle cx="15" cy="15" r="0.5" fill="#14b8a6" opacity="0.3"/>
+      <circle cx="28" cy="28" r="1" fill="#f43f5e" opacity="0.3"/>
+    </pattern>
+    <filter id="blur">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="40"/>
+    </filter>
+  </defs>
+  
+  <!-- Background shapes -->
+  <circle cx="200" cy="100" r="300" fill="url(#bgGradient)" filter="url(#blur)"/>
+  <circle cx="600" cy="500" r="250" fill="url(#bgGradient)" filter="url(#blur)"/>
+  
+  <!-- Dot pattern overlay -->
+  <rect width="100%" height="100%" fill="url(#dots)"/>
+  
+  <!-- Decorative lines -->
+  <path d="M0,300 C200,280 600,320 800,300" stroke="#6366f1" stroke-width="0.5" opacity="0.1" fill="none"/>
+  <path d="M0,310 C200,290 600,330 800,310" stroke="#14b8a6" stroke-width="0.5" opacity="0.1" fill="none"/>
+  <path d="M0,290 C200,270 600,310 800,290" stroke="#f43f5e" stroke-width="0.5" opacity="0.1" fill="none"/>
+</svg> 
