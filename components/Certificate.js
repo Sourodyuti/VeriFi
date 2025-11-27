@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import web3 from '../utils/web3';
 import VeriFiCertificateABI from '../utils/VeriFiCertificateABI.json';
 import { verifiCertificateAddress } from '../utils/contractAddresses';
+import hashFile from '../utils/hash';
+import { uploadJSON, uploadFile } from '../utils/ipfs';
 
 const verifiCertificateContract = new web3.eth.Contract(VeriFiCertificateABI, verifiCertificateAddress);
 
@@ -9,6 +11,9 @@ export default function Certificate({ account }) {
   const [certificates, setCertificates] = useState([]);
   const [courseName, setCourseName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [fileHash, setFileHash] = useState('');
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [hashing, setHashing] = useState(false);
   const [issuingCertificate, setIssuingCertificate] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -39,10 +44,47 @@ export default function Certificate({ account }) {
       setError('');
       setSuccess('');
 
-      // Mint a new certificate (NFT)
-      await verifiCertificateContract.methods.mint(account).send({ from: account });
 
-      setSuccess(`Certificate for "${courseName}" issued successfully!`);
+      // Prepare metadata and upload to IPFS (if token present)
+      const timestamp = Math.floor(Date.now() / 1000);
+      const metadata = {
+        name: courseName,
+        description: `Certificate for ${courseName}`,
+        timestamp,
+        fileHash: fileHash || undefined,
+      };
+
+      let tokenURI = '';
+      try {
+        // If a file was selected, upload it first and include its CID in metadata
+        if (selectedFile) {
+          try {
+            const fileCid = await uploadFile(selectedFile);
+            metadata.file = `ipfs://${fileCid}`;
+          } catch (err) {
+            // If upload fails, record a warning in metadata and continue
+            metadata.fileUploadError = err.message;
+          }
+        }
+
+        // Upload metadata JSON
+        const metadataCid = await uploadJSON(metadata);
+        tokenURI = `https://ipfs.io/ipfs/${metadataCid}`;
+      } catch (err) {
+        // If IPFS upload isn't configured, proceed without tokenURI but warn user
+        console.warn('IPFS upload failed or not configured:', err.message);
+      }
+
+      // Mint a new certificate (NFT) with tokenURI when available
+      if (tokenURI) {
+        await verifiCertificateContract.methods.mint(account, tokenURI).send({ from: account });
+      } else {
+        // Fallback: mint without tokenURI if contract supports it (older contracts)
+        // This repo's contract now expects tokenURI; if your deployed contract doesn't, consider redeploying.
+        await verifiCertificateContract.methods.mint(account, '').send({ from: account });
+      }
+
+      setSuccess(`Certificate for "${courseName}" issued successfully!` + (fileHash ? ` (file hash: ${fileHash})` : ''));
       setTimeout(() => setSuccess(''), 3000);
 
       // Clear form and refresh certificates
@@ -53,6 +95,24 @@ export default function Certificate({ account }) {
       setTimeout(() => setError(''), 5000);
     } finally {
       setIssuingCertificate(false);
+    }
+  };
+
+  // Handle file selection and compute SHA-256 hash
+  const onFileChange = async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    setSelectedFile(file);
+    setHashing(true);
+    setFileHash('');
+    try {
+      const hex = await hashFile(file);
+      setFileHash(hex);
+    } catch (err) {
+      setError('Failed to compute file hash: ' + err.message);
+      setTimeout(() => setError(''), 5000);
+    } finally {
+      setHashing(false);
     }
   };
 
@@ -142,6 +202,17 @@ export default function Certificate({ account }) {
 
       {/* Certificate Issuance Form */}
       <div className="certificate-form">
+        <div className="input-group">
+          <label htmlFor="certificate-file">Attach File (optional)</label>
+          <input id="certificate-file" type="file" onChange={onFileChange} disabled={!account || issuingCertificate} />
+          {hashing && <p className="muted">Computing file hash...</p>}
+          {fileHash && (
+            <div className="file-hash">
+              <label>SHA-256:</label>
+              <code style={{ wordBreak: 'break-all' }}>{fileHash}</code>
+            </div>
+          )}
+        </div>
         <div className="input-group">
           <label htmlFor="course-name">Course Name</label>
           <input
