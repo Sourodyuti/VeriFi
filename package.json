@@ -4,12 +4,21 @@
     "scripts": {
         "dev": "next dev",
         "build": "next build",
-        "start": "next start"
+        "start": "next start",
+        "hardhat": "hardhat",
+        "deploy:certificate": "hardhat run scripts/deploy_certificate.js --network localhost"
     },
     "dependencies": {
         "next": "latest",
         "react": "latest",
         "react-dom": "latest",
-        "web3": "^4.16.0"
+        "web3": "^4.16.0",
+        "web3.storage": "^4.2.0"
+    },
+    "devDependencies": {
+        "hardhat": "^2.18.0",
+        "@nomiclabs/hardhat-ethers": "^2.2.2",
+        "ethers": "^5.7.2",
+        "dotenv": "^16.0.0"
     }
 }

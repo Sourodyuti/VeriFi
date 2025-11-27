@@ -1,68 +1,110 @@
-Here is the `README.md` content tailored to your repository's concept, omitting installation steps as requested, and enhancing the professional appeal and technical depth.
 
------
+# VeriFi
 
-# VeriFi: The Immutable Truth Standard
+VeriFi is a Next.js + Ethereum dApp for on-chain verification of attendance, payments, tokens, and certificates. It provides a simple UI to interact with smart contracts (located in the `Contracts/` folder) and ships ABIs in `utils/` for frontend integration.
 
-**VeriFi** is a decentralized, trustless document authentication protocol designed to combat information tampering in the digital age. By leveraging the immutable nature of the Ethereum blockchain and advanced cryptographic hashing, VeriFi establishes a permanent, verifiable "fingerprint" for any digital asset.
+**This README covers:** quick setup, project layout, how to run the app locally, where to find smart contracts and ABIs, and helpful notes for contributors.
 
-## The Concept
+**Tech stack:** Next.js, React, Web3.js, Solidity
 
-In an era where deep fakes and document forgery are becoming sophisticated, centralized verification authorities are no longer sufficient. VeriFi replaces human trust with **cryptographic certainty**.
+**Quick Links:**
+- **Contracts:** `Contracts/`
+- **Frontend pages:** `pages/`
+- **React components:** `components/`
+- **ABIs & utilities:** `utils/`
 
-The system operates on a "Zero-Knowledge" principle: **We never see your documents.** Instead, we interact mathematically with the unique signature of your file. If a single byte of data is altered—a date changed, a name swapped, a pixel shifted—the cryptographic signature crumbles, and VeriFi detects the fraud instantly.
+**Prerequisites**
+- Node.js (v16+ recommended)
+- npm (or yarn)
+- MetaMask (or another Web3 wallet) for interacting with the dApp in the browser
 
-## Architectural Process & Workflow
+**Install & Run (Development)**
+Open PowerShell in the repository root and run:
 
-VeriFi employs a multi-layered verification engine that handles the entire lifecycle of document integrity without compromising privacy.
+```powershell
+npm install
+npm run dev
+```
 
-### Phase 1: Client-Side Cryptographic Ingestion
+Then open `http://localhost:3000` in your browser and connect your wallet via the UI.
 
-The process begins instantly in the user's browser. Upon dragging and dropping a file, VeriFi's client-side engine (built on **Next.js**) initiates a local hashing sequence.
+**Available npm scripts**
+- `npm run dev` — development server (Next.js)
+- `npm run build` — build production assets
+- `npm start` — start production server after build
 
-  * **The Engine:** A SHA-256 algorithm processes the binary data of the file.
-  * **The Result:** A unique 64-character hexadecimal string (the "hash") is generated. This hash is the digital DNA of the document.
-  * **Privacy:** The original file *never* leaves the user's device. Only the hash is transmitted.
+**Project Structure (high level)**
 
-### Phase 2: Blockchain Anchoring (The Immutable Ledger)
+- `Contracts/` : Solidity smart contracts
+  - `Attendance.sol` — attendance-related contract
+  - `Certificate.sol` — certificate management contract
+  - `Payment.sol` — payment processing contract
+  - `RewardToken.sol` — ERC-style token contract
+- `components/` : React components used across pages (e.g., `Attendance.js`, `Certificate.js`, `Payment.js`, `Token.js`, `Navbar.js`)
+- `pages/` : Next.js pages (`index.js`, `_app.js`, `_document.js`)
+- `public/` & `styles/` : static assets and CSS
+- `utils/` : ABIs, `web3.js`, `ContractAddresses.js`, and helper utilities
 
-Once the hash is generated, the Web3 interface invokes the **Smart Contract** located in the `Contracts` directory.
+**Key files to inspect**
+- `utils/web3.js` — web3 provider setup and fallback RPC. The file uses `window.ethereum` when available and falls back to a fixed RPC URL.
+- `utils/VeriFi*.json` — ABI files for the deployed contracts (used by the frontend to create contract instances)
+- `utils/ContractAddresses.js` — central place for contract addresses used by the frontend (update as you deploy)
 
-  * **Transaction:** The user signs a transaction via their wallet (e.g., MetaMask).
-  * **Anchoring:** The Smart Contract accepts the hash and permanently etches it into the Ethereum blockchain state, along with a timestamp and the issuer's wallet address.
-  * **Consensus:** The network miners validate the transaction, ensuring that this record is replicated across thousands of nodes worldwide.
+**How the frontend connects**
+- The UI requests wallet access using the browser provider (MetaMask). See `pages/index.js` which calls `web3.eth.getAccounts()` and passes the `account` prop down to components.
 
-### Phase 3: The Verification Query
+**Client-side hashing & privacy**
+- The project implements client-side SHA-256 hashing to compute a file fingerprint without uploading the original file. See `utils/hash.js` for the hashing utility (uses the Web Crypto `SubtleCrypto` API).
+- `components/Certificate.js` contains a file input that computes the SHA-256 digest when a file is selected and displays the hex hash. The app does not send the raw file to any server by default — only the hash can be recorded or used as metadata for on-chain anchoring.
+- This approach preserves privacy: the original document remains on the user's device while a short, fixed-size fingerprint (the hash) can be anchored on-chain or included in off-chain metadata.
 
-When a third party needs to verify a document:
+**Deployment & Contracts**
+- This repository contains the Solidity contracts but does not include deployment scripts. For deployment use a tool like Hardhat or Truffle and add a `scripts/deploy.js` that records deployed addresses into `utils/ContractAddresses.js`.
 
-1.  They upload the "suspicious" file to the VeriFi interface.
-2.  The engine re-calculates the hash in real-time.
-3.  The system queries the Smart Contract: *"Does this hash exist in your ledger?"*
-4.  **Match:** The system returns the original timestamp and the signer's identity, proving authenticity.
-5.  **Mismatch:** The system flags the document as invalid or tampered with.
+**Developer Notes / Known Issues**
+- `utils/web3.js` calls `window.ethereum.enable()` which is deprecated — consider updating to `ethereum.request({ method: 'eth_requestAccounts' })` for a cleaner API.
+- Ensure the RPC endpoint in `utils/web3.js` is appropriate for your target network (mainnet/testnet/local). Currently it falls back to `https://rpc.open-campus-codex.gelato.digital`.
+- `utils/hash.js` uses the browser `crypto.subtle` API; this runs only in secure contexts (HTTPS or localhost). When testing on a non-secure server, hashing may fail.
+- The current certificate mint flow (`verifiCertificateContract.methods.mint(account)`) does not accept file hash or metadata directly. To record file hashes on-chain consider minting with a tokenURI that points to metadata (IPFS) which includes the computed hash.
 
-## Tech Stack & Components
+**On-chain metadata & IPFS**
+- This repository now supports minting certificates with a `tokenURI` that points to JSON metadata (IPFS). The flow implemented in `components/Certificate.js` is:
+  1. User optionally selects a file — the UI computes a SHA-256 hash locally (`utils/hash.js`).
+  2. If configured, the app uploads the file (optional) and metadata JSON to IPFS via Web3.Storage (`utils/ipfs.js`).
+  3. The returned CID is used to create a `tokenURI` (gateway URL) which is passed to the smart contract when calling `mint(address, tokenURI)`.
 
-  * **Smart Contracts (Solidity):** The backbone of the system. Custom-written logic ensures that once a document is registered, its record is censorship-resistant and eternal.
-  * **Frontend (Next.js & React):** A high-performance, reactive user interface found in the `pages` and `components` directories, capable of handling large file buffers for local hashing.
-  * **Web3 Integration:** Seamless connection layers in `utils` that bridge the gap between the browser and the decentralized network.
-  * **Styling:** Modular CSS architecture ensuring a professional, clean aesthetic suitable for enterprise auditing.
+**Configuration (Web3.Storage)**
+- To enable IPFS uploads you must set a Web3.Storage API token as an environment variable in your Next.js environment:
 
-## Key Features
+- Create a `.env.local` file at the project root and add:
 
-  * **Tamper-Proof History:** Records on the blockchain cannot be deleted or modified by anyone, including the original uploader.
-  * **Provenance Tracking:** See exactly *who* verified a document and *when* to the exact second.
-  * **Format Agnostic:** Verifies PDFs, Images, JSON, Source Code, or any other binary file type.
-  * **Decentralized Availability:** 100% uptime guaranteed by the distributed nature of the blockchain network.
+  ```text
+  NEXT_PUBLIC_WEB3STORAGE_TOKEN=your_web3storage_api_token_here
+  NEXT_PUBLIC_RPC_URL=https://... (optional)
+  ```
 
-## Future Roadmap
+- Get a token at https://web3.storage and paste it into `.env.local`.
 
-  * **Cross-Chain Interoperability:** Bridging verification standards to Polygon and Solana for lower gas fees.
-  * **AI-Driven Fraud Detection:** Heuristic analysis to flag files that *look* suspicious even before hashing.
-  * **Enterprise API:** Allowing banks and legal firms to integrate VeriFi directly into their existing internal tools.
+**Hardhat deploy example**
+- A minimal Hardhat configuration and deploy script have been added (`hardhat.config.js`, `scripts/deploy_certificate.js`). To deploy locally:
 
------
+  ```powershell
+  npm install
+  npx hardhat node
+  npm run deploy:certificate
+  ```
 
-*Built with precision for the decentralized web.*
+  The script prints the deployed contract address. Update `utils/ContractAddresses.js` with the new address for the frontend.
+
+**Notes about compatibility**
+- The `Certificate` contract was updated to `ERC721URIStorage` and the `mint` function now accepts a `tokenURI` (`mint(address,string)`). If you already have the previous contract deployed, you'll need to redeploy and update the address in `utils/ContractAddresses.js`.
+
+**Contributing**
+- Please open issues for bugs and feature requests. Pull requests are welcome — keep changes small and focused.
+
+**License**
+- See the top-level `LICENSE` file for license terms.
+
+---
+
 
